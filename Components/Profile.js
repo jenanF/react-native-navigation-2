@@ -1,11 +1,13 @@
 import React from 'react'
-import { View, Text, Button, Image } from 'react-native'
+import { View, Text, Button, Image, FlatList } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { useState } from 'react'
 import { useUser } from '../UserContext'
 import { useNavigation } from '@react-navigation/native'
 import * as imagePicker from 'expo-image-picker'
 import icon from '../assets/icon.png'
+import { items } from '../data'
+import ListItem from './ListItem'
 
 const Profile = () => {
 
@@ -15,6 +17,8 @@ const Profile = () => {
     const { user } = useUser();
     const { setUser } = useUser();
     const [image, setImage] = useState(null);
+
+    const myItems = items.filter((item) => { return item.creatorId == user.userId })
 
     const uploadImage = async () => {
         await imagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,6 +62,7 @@ const Profile = () => {
             <Button color='blue' title='Upload Image' onPress={uploadImage} />
             <Text>Name: {user.name}</Text>
             <Text>Email: {user.email}</Text>
+            <FlatList data={myItems} renderItem={({ item }) => <ListItem name={item.name} price={item.price} />} />
 
             <Button color='grey' title='Edit Profile' onPress={goToEditProfile} />
 
